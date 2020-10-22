@@ -2,7 +2,7 @@
 Land Parcel Data Assignment
 Both the JSON endpoint and website are contained in this one project and are all run through Python and Flask.
 
-REQUIREMENTS:
+# REQUIREMENTS:
 Python 3.9.0
 
 Required Python modules installed through PyPI:
@@ -10,7 +10,7 @@ xmltodict 0.12.0
 flask 1.1.2
 (earlier versions of both modules and python may function, but have not been tested)
 
-#SETUP:
+# SETUP:
 
 Install python and necessary modules.
 Download package.
@@ -19,7 +19,7 @@ Enter the command "flask run".
 Copy the server address provided to you in the command prompt window and enter it in your
 web browser's address bar
 
-#HOW TO USE:
+# HOW TO USE:
 
 Once the flask server has started, users can get access to both the JSON and HTML resources.
 
@@ -37,7 +37,7 @@ in the "Look Up" box in the top right corner and click "Look Up"
 You may also access the pages by entering the URL in your browser's address bar following the same
 pattern as the JSON endpoint, but replace "/json/" with "/page/".
 
-#TODO:
+# TODO:
 
 Error checking on the user's input parcel ID.
 Error pages to show what went wrong.
