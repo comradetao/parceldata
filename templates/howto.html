@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block parceltitle %}
+
+<h2>Search for a Parcel</h2>
+<p>
+  To search for a parcel, enter the parcel ID in the search bar in the top right
+  corner of the page. On small screens or mobile devices, you may have to expand
+  the menu by touching the expand button.
+</p>
+<h2>Formatting</h2>
+<p>
+  The format for a parcel ID is "###-##-###". You must enter the dashes when you search.
+  Do not include any spaces or extra characters. Quotation must not be used.
+</p>
+<h2>Getting JSON information</h2>
+<p>
+  A JSON version of the information posted on each parcel's page can be obtained
+  by changing out the "/page/" portion of the URL to "/json/".
+</p>
+
+{% endblock %}

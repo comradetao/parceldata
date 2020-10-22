@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %} Parcel {% endblock %}
+
+{% block header %} Hi there, this is a header {% endblock %}
+
+{% block parceltitle %}
+<!-- Title area including the parcel ID and address-->
+<table class="table table-responsive-md text-left width-auto">
+  <td>
+    <div class="container-fluid text-center">
+      <p><h1 id="parcelid">Parcel ID: </h1></p>
+      <p id="address"></p>
+    </div>
+  </td>
+  <tr>
+  <td style="text-align:center">
+    {% set imgUrl = "images/" + parcelData.lbstream.parcelid.id +"_main_pic.jpg" %}
+    <img src={{ url_for('static',filename=imgUrl) }}></img>
+  </td>
+  </tr>
+</table>
+{% endblock %}
+
+
+{% block map %}
+  <!-- Map area block-->
+  <!--The div element for the map -->
+  <div id="map"></div>
+{% endblock %}
+
+{% block tabledata %}
+<!-- Table area containing all of the information from the XML / JSON endpoint-->
+<div class="container-fluid justify-content-center">
+
+  {% set sources = parcelData.lbstream.parcelid.source %}
+  {% for source in sources %}
+    <p><h1>Source: {{ source.sourcename }}</h1></p>
+    <table class="table table-responsive-md text-left width-auto"">
+      <thead class="thead-dark">
+        <th scope="col">Description</th>
+        <th scope="col">Data</th>
+        <th scope="col">Last Updated</th>
+      </thead>
+      <tbody  id="{{ source.sourcename }}"">
+      </tbody>
+    </table>
+  {% endfor %}
+
+</div>
+{% endblock %}
+
+{% block script %}
+  <script>
+  parcelLocation = {lat: 0, lng: 0};
+
+  //This is the wait for load statement
+  $(document).ready(function() {
+    // Everything in here will run after the page loads.
+
+    // Request the XML data from the server and store it as "request"
+    xmlResponse = $.ajax({
+      method: "GET",
+      url: "{{ jsonDataUrl }}",
+      dataType: "json",
+    }).done(function(response) {
+        console.log(response);
+
+        // Set latitude and longitude for Google Map.
+        parcelLocation.lat = response.lbstream.parcelid.source[0].record.LATITUDE.value;
+        console.log(parcelLocation.lat);
+        parcelLocation.lng = response.lbstream.parcelid.source[0].record.LONGITUDE.value;
+        console.log(parcelLocation.lng);
+
+        // Write out plot ID
+        $("#parcelid").append(response.lbstream.parcelid.id);
+
+        // Write out the plot address
+        var mail = response.lbstream.parcelid.source[0].record;
+        $("#address").append(mail.MAIL_STREET_NUMBER.value + " " + mail.MAIL_STREET_NAME.value
+                             + ", " + mail.MAIL_STREET_SUFFIX.value +"., " + mail.MAIL_CITY.value +
+                             ", " + mail.MAIL_STATE.value + " " + mail.MAIL_ZIPCODE.value);
+
+        // Write out the XML / JSON data to the table.
+        $.each(response.lbstream.parcelid.source, function() {
+          var source = this;
+
+          $.each(source.record, function(){
+            $("#" + source.sourcename).append("<tr>");
+            $("#" + source.sourcename).append("<td>" + this.description + "</td>");
+            $("#" + source.sourcename).append("<td>" + this.value + "</td>");
+            $("#" + source.sourcename).append("<td>" + this.update_date + "</td>");
+            $("#" + source.sourcename).append("</tr>");
+          });
+        });
+      });
+  // this is the end of the wait for load statement
+  });
+
+  // This is the Google Map script
+  function initMap() {
+    //location of the parcel
+    parcelLocation = {lat: {{ parcelData.lbstream.parcelid.source[0].record.LATITUDE.value }},
+                      lng: {{ parcelData.lbstream.parcelid.source[0].record.LONGITUDE.value }}};
+
+    const map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 14,
+      center: parcelLocation,
+      });
+
+    // The marker, positioned at Uluru
+    const marker = new google.maps.Marker({
+      position: parcelLocation,
+      map: map,
+    });
+  }
+
+
+  </script>
+{% endblock %}
