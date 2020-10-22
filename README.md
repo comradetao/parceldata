@@ -8,6 +8,7 @@ Python 3.9.0
 Required Python modules installed through PyPI:
 xmltodict 0.12.0
 flask 1.1.2
+requests 2.24.0
 (earlier versions of both modules and python may function, but have not been tested)
 
 # SETUP:
